@@ -40,11 +40,12 @@
   /* The card is a white cake board: thick edge, soft shadow, slightly turned. */
   .board {
     position: relative;
+    z-index: 1;
     width: 100%;
     max-width: 380px;
     background: var(--board);
     border-radius: 6px;
-    padding: 36px 24px 24px;
+    padding: 30px 22px 38px;
     text-align: center;
     transform: rotate(-1.5deg);
     box-shadow: 0 5px 0 #e4e0e1, 0 7px 0 #d9d4d6, 0 24px 50px rgba(90, 70, 80, .18);
@@ -52,11 +53,26 @@
   }
   @keyframes place { from { opacity: 0; transform: translateY(28px) rotate(-4deg) scale(.96); } }
 
-  .corner { position: absolute; top: -14px; right: -4px; width: 92px; height: 70px; pointer-events: none; }
-  .corner .ph { position: absolute; animation: bob 3.2s ease-in-out infinite; }
-  .corner .ph:nth-child(2) { animation-delay: -1s; }
-  .corner .ph:nth-child(3) { animation-delay: -2s; }
-  @keyframes bob { 50% { transform: translateY(-4px) rotate(-6deg); } }
+  /* Room above for the princess topper and around for the corner stickers. */
+  .stage { position: relative; width: 100%; max-width: 416px; padding: 150px 18px 50px; }
+  .princess {
+    position: absolute; left: 50%; top: 0; width: 158px; margin-left: -79px; z-index: 0;
+    filter: drop-shadow(0 6px 10px rgba(120, 60, 80, .25));
+    animation: rise .8s cubic-bezier(.3, 1.4, .5, 1) .25s both;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(40px) scale(.85); } }
+  .stk {
+    position: absolute; width: 104px; z-index: 3;
+    filter: drop-shadow(0 4px 6px rgba(120, 60, 80, .22));
+    animation: stick .55s cubic-bezier(.3, 1.6, .5, 1) both, sway 4s ease-in-out infinite;
+  }
+  .stk.tl { left: 0; top: 112px; --r: -11deg; animation-delay: 1s, 1.6s; }
+  .stk.tr { right: 0; top: 104px; --r: 10deg; animation-delay: 1.15s, 2.2s; }
+  .stk.bl { left: 0; bottom: 6px; --r: 8deg; animation-delay: 1.3s, 1.9s; }
+  .stk.br { right: 0; bottom: 2px; --r: -9deg; animation-delay: 1.45s, 2.5s; }
+  .stk { transform: rotate(var(--r)); }
+  @keyframes stick { from { opacity: 0; transform: rotate(var(--r)) scale(.3); } }
+  @keyframes sway { 50% { transform: rotate(calc(var(--r) * -0.4)) translateY(-3px); } }
 
   .piped {
     font-family: 'Gaegu', cursive;
@@ -79,15 +95,9 @@
     background: var(--pink); box-shadow: inset -1px -2px 0 #c86378; vertical-align: middle;
   }
 
-  .wish { margin: 12px 0 0; }
-  .wish p { margin: 0 0 4px; }
-  .wish .meaning { font: 700 22px/1.3 'Gaegu', cursive; color: var(--pink-deep); margin: 0 0 8px; }
-  .sep {
-    margin: 14px auto 12px; padding-top: 12px; border-top: 1px solid var(--line);
-    font: 700 19px/1.25 'Gaegu', cursive; color: #8b7fd1;
-  }
+  .invite { margin: 12px 0 0; padding-bottom: 12px; border-bottom: 1px solid var(--line); font: 700 22px/1.3 'Gaegu', cursive; color: var(--pink-deep); text-wrap: balance; }
 
-  .plan { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; text-align: left; }
+  .plan { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 7px; text-align: left; }
   .plan li { display: grid; grid-template-columns: 52px 1fr; padding-left: 38px; align-items: center; gap: 8px; }
   .plan time { font: 700 20px/1 'Gaegu', cursive; color: var(--pink-deep); }
   .plan b { display: block; font-weight: 600; font-size: 13.5px; line-height: 1.3; }
@@ -98,12 +108,15 @@
   #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
 
   @media (min-width: 720px) {
-    .board { max-width: 440px; padding: 42px 32px 28px; }
+    .stage { max-width: 500px; padding: 168px 30px 56px; }
+    .board { max-width: 440px; padding: 36px 32px 40px; }
+    .princess { width: 176px; margin-left: -88px; }
+    .stk { width: 124px; }
     h1 { font-size: 58px; }
     .my { font-size: 46px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .board, .corner .ph, h1 .ch, .my .ph { animation: none; }
+    .board, .princess, .stk, h1 .ch, .my .ph { animation: none; }
   }
 </style>
 </head>
@@ -137,23 +150,19 @@
 
 <canvas id="confetti"></canvas>
 
+<div class="stage" id="stage">
+<img class="princess" src="thiep-assets/princess.webp" alt="Công chúa">
+<img class="stk tl" src="thiep-assets/couple-07.webp" alt="">
+<img class="stk tr" src="thiep-assets/couple-09.webp" alt="">
+<img class="stk bl" src="thiep-assets/couple-05.webp" alt="">
+<img class="stk br" src="thiep-assets/couple-06.webp" alt="">
 <main class="board" id="card">
-  <div class="corner" aria-hidden="true">
-    <svg class="ph" style="font-size:40px;left:30px;top:6px"><use href="#heart-pink"/></svg>
-    <svg class="ph" style="font-size:26px;left:8px;top:34px"><use href="#heart-lilac"/></svg>
-    <svg class="ph" style="font-size:20px;left:66px;top:42px"><use href="#heart-pink"/></svg>
-  </div>
-
   <h1 class="piped" aria-label="Happy birthday my love">
     <span class="w">Happy</span> <span class="w">birthday</span>
     <span class="my"><i class="dot"></i><span class="w">my</span> <svg class="ph"><use href="#heart-pink"/></svg><i class="dot"></i></span>
   </h1>
 
-  <div class="wish">
-    <p class="meaning">Anh thực sự rất yêu em <svg class="ph"><use href="#heart-red"/></svg></p>
-  </div>
-
-  <div class="sep">Lời mời tham dự buổi sinh nhật</div>
+  <p class="invite">Lời mời tham dự buổi sinh nhật</p>
 
   <ol class="plan">
     <li>
@@ -174,11 +183,13 @@
     </li>
   </ol>
 </main>
+</div>
 
 <script>
   const colors = ['#e7899b', '#f8c3cd', '#c9607a', '#8b7fd1', '#b9a9f0', '#ffffff'];
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const card = document.getElementById('card');
+  const stage = document.getElementById('stage');
 
   // Split the title into letters so they appear one by one, like icing being piped.
   let order = 0;
@@ -188,11 +199,11 @@
       .join('');
   });
 
-  // Shrink the card on short screens so the page never scrolls.
+  // Shrink the stage on short screens so the page never scrolls.
   function fitCard() {
-    card.style.zoom = '1';
-    const room = innerHeight - 40;
-    card.style.zoom = String(Math.min(1, room / card.offsetHeight));
+    stage.style.zoom = '1';
+    const room = innerHeight - 24;
+    stage.style.zoom = String(Math.min(1, room / stage.offsetHeight));
   }
   addEventListener('resize', fitCard);
   document.fonts.ready.then(fitCard);

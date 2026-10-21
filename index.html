@@ -81,10 +81,7 @@
 
   .wish { margin: 12px 0 0; }
   .wish p { margin: 0 0 4px; }
-  .quote { margin: 0 0 10px; font-style: italic; color: var(--ink-dim); }
-  .quote span { display: block; }
   .wish .meaning { font: 700 22px/1.3 'Gaegu', cursive; color: var(--pink-deep); margin: 0 0 8px; }
-  .quote cite { display: block; font: 700 18px/1.3 'Gaegu', cursive; color: var(--pink-deep); font-style: normal; margin-top: 2px; }
   .sep {
     margin: 14px auto 12px; padding-top: 12px; border-top: 1px solid var(--line);
     font: 700 19px/1.25 'Gaegu', cursive; color: #8b7fd1;
@@ -117,6 +114,9 @@
     <radialGradient id="g-pink" cx="35%" cy="30%" r="75%">
       <stop offset="0" stop-color="#fbc6d0"/><stop offset=".55" stop-color="#e8849a"/><stop offset="1" stop-color="#c95a74"/>
     </radialGradient>
+    <radialGradient id="g-red" cx="35%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#ff8a8a"/><stop offset=".55" stop-color="#e2263b"/><stop offset="1" stop-color="#a3101f"/>
+    </radialGradient>
     <radialGradient id="g-lilac" cx="35%" cy="30%" r="75%">
       <stop offset="0" stop-color="#b9a9f0"/><stop offset=".55" stop-color="#6f56c4"/><stop offset="1" stop-color="#4b3596"/>
     </radialGradient>
@@ -124,6 +124,10 @@
   </defs>
   <symbol id="heart-pink" viewBox="0 0 24 22">
     <use href="#heart-path" fill="url(#g-pink)"/>
+    <ellipse cx="7.2" cy="6.2" rx="2.6" ry="1.5" fill="#fff" opacity=".55" transform="rotate(-35 7.2 6.2)"/>
+  </symbol>
+  <symbol id="heart-red" viewBox="0 0 24 22">
+    <use href="#heart-path" fill="url(#g-red)"/>
     <ellipse cx="7.2" cy="6.2" rx="2.6" ry="1.5" fill="#fff" opacity=".55" transform="rotate(-35 7.2 6.2)"/>
   </symbol>
   <symbol id="heart-lilac" viewBox="0 0 24 22">
@@ -147,13 +151,7 @@
   </h1>
 
   <div class="wish">
-    <blockquote class="quote" lang="en">
-      <span>“I really like you… A lot.”</span>
-      <span>“How much is a lot?”</span>
-      <span>“Like a spring bear.”</span>
-      <cite lang="vi">— Rừng Na Uy, Haruki Murakami</cite>
-    </blockquote>
-    <p class="meaning">Anh thực sự rất yêu em 🧸</p>
+    <p class="meaning">Anh thực sự rất yêu em <svg class="ph"><use href="#heart-red"/></svg></p>
   </div>
 
   <div class="sep">Lời mời tham dự buổi sinh nhật</div>
